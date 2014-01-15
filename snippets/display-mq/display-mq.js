@@ -83,8 +83,9 @@
 
     document.body.appendChild(dmqDiv);
     
-
+    // optionnal if you don't need to display height and width of the actual screen
     window.onresize = function(){
+        // could check here all available media queries with window.matchMedia();
         var w=(document.documentElement.clientWidth||window.innerWidth),
             h=(document.documentElement.clientHeight||window.innerHeight);
         document.getElementById(divId).setAttribute('data-height',h);
