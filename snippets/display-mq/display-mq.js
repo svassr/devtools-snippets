@@ -6,9 +6,10 @@
  * Display applied mediaqueries in the bottom right corner of the screen while resizing the window
  * You can add your own media queries to mqList
  */
-'use strict';
 
 (function(){
+    'use strict';
+
     // You can add your own media queries to mqList
     var mqList = {
             'portrait':         '(orientation: portrait)',
@@ -27,38 +28,40 @@
             'smallPhone':       'only screen and (min-width: 320px) and (max-height: 510px) ', //Samsung Galaxy Ace
             'keyboardOpened':   'only screen and (min-width: 320px) and (max-height: 270px) ',
         },
+        styleId='style-display-mq',
         divId='display-media-query';
 
     var css = document.createTextNode(''+
         '#display-media-query {'+
-        ' position: absolute;'+
-        ' bottom: 0px;'+
-        ' right:0px;'+
-        ' z-index: 999;'+
-        ' display: block;'+
-        ' width: auto;'+
-        ' height: auto;'+
+        ' z-index:999; position:absolute; display:block;'+
+        ' bottom:0px; right:0px;'+
+        ' width:auto; height:auto;'+
         '}'+
         '#display-media-query::after{'+
-        ' color: white; font: 15px arial;'+
-        ' display: block;'+
-        ' padding: 7px 10px;'+
-        ' position: relative;'+
-        ' top: 0px ;'+
-        ' left: 0px;'+
-        ' border-radius: 10px 0 0 0; border: #333 1px solid; border-width: 1px 0 0 1px;'+
+        ' position:relative; display:block; top:0px; left:0px;'+
+        ' padding: 0.4em 0.8em;'+
+        ' box-shadow: 0px -1px 8px #444;'+
+        ' color: white; font: 1.4rem arial;'+
         '}');
 
-    var style = document.createElement("style");
-    style.appendChild(css);
-
     function size(obj) {
-        var size = 0, key;
+        var s = 0, key;
         for (key in obj) {
-            if (obj.hasOwnProperty(key)) size++;
+            if (obj.hasOwnProperty(key)) s++;
         }
-        return size;
-    };
+        return s;
+    }
+    function removeIfExist(elId){
+        var el=document.getElementById(elId);
+        if(el){
+            el.remove();
+        }
+    }
+    
+    var style = document.createElement("style");
+    removeIfExist(styleId);
+    style.setAttribute("id", styleId);
+    style.appendChild(css);
 
     // Get the size of an object
     var c=size(mqList),
@@ -70,19 +73,15 @@
         style.appendChild(css);
         i-=1;
     }
-    
     document.body.appendChild(style);
-    
+
     // write dmq pane <div>
+    removeIfExist(divId);
     var dmqDiv = document.createElement("div");
     dmqDiv.innerHTML = "&nbsp;";
-    console.log(dmqDiv);
     dmqDiv.setAttribute("id", divId);
-    dmqDiv.setAttribute("data-height", (document.documentElement.clientHeight||window.innerHeight));
-    dmqDiv.setAttribute("data-width", (document.documentElement.clientWidth||window.innerWidth));
-
     document.body.appendChild(dmqDiv);
-    
+
     // optionnal if you don't need to display height and width of the actual screen
     window.onresize = function(){
         // could check here all available media queries with window.matchMedia();
